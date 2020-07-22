@@ -22,49 +22,109 @@ THE SOFTWARE.
 package cmd
 
 import (
-  "fmt"
-  "os"
-  "github.com/spf13/cobra"
+	"bufio"
+	"context"
+	"fmt"
+	"io"
+	"io/ioutil"
+	"log"
+	"os"
+	"strings"
 
+	"github.com/k1LoW/regexq/format"
+	"github.com/k1LoW/regexq/format/sqlite"
+	"github.com/k1LoW/regexq/parser"
+	"github.com/k1LoW/regexq/version"
+	"github.com/mattn/go-isatty"
+	"github.com/spf13/cobra"
 )
 
-
-
-// rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-  Use:   "regexq",
-  Short: "A brief description of your application",
-  Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+	Use:   "regexq [REGEXP]",
+	Short: "regexq",
+	Long:  `regexq.`,
+	Args: func(cmd *cobra.Command, args []string) error {
+		if len(args) != 1 {
+			return fmt.Errorf("accepts %d arg(s), received %d", 1, len(args))
+		}
+		if isatty.IsTerminal(os.Stdin.Fd()) {
+			return fmt.Errorf("%s need STDIN. Please use pipe", version.Name)
+		}
+		return nil
+	},
+	Version: version.Version,
+	Run: func(cmd *cobra.Command, args []string) {
+		var f format.Formatter
+		regexp := args[0]
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-  // Uncomment the following line if your bare application
-  // has an action associated with it:
-  //	Run: func(cmd *cobra.Command, args []string) { },
+		in := bufio.NewReader(os.Stdin)
+		out := os.Stdout
+		f = sqlite.New()
+		p := parser.New(regexp)
+
+		schema := p.Schema()
+		if err := f.WriteSchema(out, schema); err != nil {
+			printFatalln(cmd, err)
+		}
+
+	L:
+		for {
+			s, err := in.ReadString('\n')
+			if err == io.EOF {
+				break L
+			} else if err != nil {
+				printFatalln(cmd, err)
+			}
+			select {
+			case <-ctx.Done():
+				break L
+			default:
+				parsed := p.Parse(strings.TrimSuffix(s, "\n"))
+				if err := f.Write(out, schema, parsed); err != nil {
+					printFatalln(cmd, err)
+				}
+			}
+		}
+	},
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-  if err := rootCmd.Execute(); err != nil {
-    fmt.Println(err)
-    os.Exit(1)
-  }
+	rootCmd.SetOut(os.Stdout)
+	rootCmd.SetErr(os.Stderr)
+
+	log.SetOutput(ioutil.Discard)
+	if env := os.Getenv("DEBUG"); env != "" {
+		debug, err := os.Create(fmt.Sprintf("%s.debug", version.Name))
+		if err != nil {
+			printFatalln(rootCmd, err)
+		}
+		log.SetOutput(debug)
+	}
+
+	if err := rootCmd.Execute(); err != nil {
+		printFatalln(rootCmd, err)
+	}
 }
 
-func init() {
-  // Here you will define your flags and configuration settings.
-  // Cobra supports persistent flags, which, if defined here,
-  // will be global for your application.
+func init() {}
 
-  // rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.regexq.yaml)")
-
-
-  // Cobra also supports local flags, which will only run
-  // when this action is called directly.
-  rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+// https://github.com/spf13/cobra/pull/894
+func printErrln(c *cobra.Command, i ...interface{}) {
+	c.PrintErr(fmt.Sprintln(i...))
 }
 
+func printErrf(c *cobra.Command, format string, i ...interface{}) {
+	c.PrintErr(fmt.Sprintf(format, i...))
+}
 
+func printFatalln(c *cobra.Command, i ...interface{}) {
+	printErrln(c, i...)
+	os.Exit(1)
+}
+
+func printFatalf(c *cobra.Command, format string, i ...interface{}) {
+	printErrf(c, format, i...)
+	os.Exit(1)
+}
