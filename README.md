@@ -56,6 +56,21 @@ $ tail -f /var/log/access.log | lrep '^(?P<host>\S*) \S* \S* \[(?P<time>.*)\] "(
 | `bytes` | regexp submatches[5] |
 | `_raw` ( default ) | raw string |
 
+### Ignore `m0` and `_raw`
+
+If you want to ignore `m0`, use `--no-m0`.
+And if you want to ignore `_raw`, you can use `--no-raw`.
+
+``` console
+$ tail -f /var/log/access.log | lrep --no-m0 --no-raw '^(?P<host>\S*) \S* \S* \[(?P<time>.*)\] "(?P<request>.*)" (?P<status>\S*) (?P<bytes>\S*)'
+{"bytes":"118","host":"100.39.167.131","request":"GET /category/toys HTTP/1.1","status":"200","time":"25/Jul/2020:17:46:26 +0900"}
+{"bytes":"70","host":"36.30.101.105","request":"GET /item/electronics/1293 HTTP/1.1","status":"200","time":"25/Jul/2020:17:46:26 +0900"}
+{"bytes":"123","host":"212.87.25.78","request":"GET /category/software HTTP/1.1","status":"200","time":"25/Jul/2020:17:46:26 +0900"}
+{"bytes":"76","host":"84.189.195.199","request":"GET /category/office HTTP/1.1","status":"200","time":"25/Jul/2020:17:46:27 +0900"}
+{"bytes":"103","host":"164.78.219.152","request":"GET /item/electronics/1175 HTTP/1.1","status":"200","time":"25/Jul/2020:17:46:28 +0900"}
+[...]
+```
+
 ### Support output format
 
 `lrep` supports some output formats.
