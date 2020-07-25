@@ -1,0 +1,70 @@
+before:
+  hooks:
+    - go mod download
+    - go mod tidy
+builds:
+-
+  id: lrep-linux
+  env:
+    - CGO_ENABLED=0
+  goos:
+    - linux
+  ldflags:
+    - -s -w -X github.com/k1LoW/lrep.version={{.Version}} -X github.com/k1LoW/lrep.commit={{.FullCommit}} -X github.com/k1LoW/lrep.date={{.Date}} -X github.com/k1LoW/lrep/version.Version={{.Version}}
+-
+  id: lrep-darwin
+  env:
+    - CGO_ENABLED=0
+  goos:
+    - darwin
+  ldflags:
+    - -s -w -X github.com/k1LoW/lrep.version={{.Version}} -X github.com/k1LoW/lrep.commit={{.FullCommit}} -X github.com/k1LoW/lrep.date={{.Date}} -X github.com/k1LoW/lrep/version.Version={{.Version}}
+archives:
+-
+  id: lrep-archive
+  name_template: '{{ .ProjectName }}_v{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+  format_overrides:
+    - goos: darwin
+      format: zip
+  files:
+    - CREDITS
+    - README.md
+    - CHANGELOG.md
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Version }}-next"
+changelog:
+  skip: true
+brews:
+-
+  name: lrep
+  github:
+    owner: k1LoW
+    name: homebrew-tap
+  commit_author:
+    name: k1LoW
+    email: k1lowxb@gmail.com
+  homepage: https://github.com/k1LoW/lrep
+  description: line regular expression parser
+  install: |
+    system './lrep', 'completion', 'bash', '--out', 'lrep.bash'
+    system './lrep', 'completion', 'zsh', '--out', 'lrep.zsh'
+    bin.install 'lrep'
+    bash_completion.install 'lrep.bash' => 'lrep'
+    zsh_completion.install 'lrep.zsh' => '_lrep'
+nfpms:
+  -
+    id: lrep-nfpms
+    file_name_template: "{{ .ProjectName }}_{{ .Version }}-1_{{ .Arch }}"
+    builds:
+    - lrep-linux
+    homepage: https://github.com/k1LoW/lrep
+    maintainer: Ken'ichiro Oyama <k1lowxb@gmail.com>
+    description: line regular expression parser
+    license: MIT
+    formats:
+      - deb
+      - rpm
+    bindir: /usr/bin
+    epoch: 1
