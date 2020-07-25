@@ -139,8 +139,20 @@ $ tail -f /var/log/access.log | lrep --combined
 [...]
 ```
 
-| built-in regexp | description |
-| --- | --- |
-| `common` | Common Log Format |
-| `combined` | Combined Log Format |
-| `postgresql` | PostgreSQL log |
+You can check the built-in regxp patterns by `lrep builtin` command.
+
+``` console
+$ lrep builtin
+common  Common Log Format
+combined        Combined Log Format
+postgresql      PostgreSQL log
+$ lrep builtin common
+NAME
+       common -- Common Log Format
+
+REGEXP
+       ^(?P<host>\S*) (?P<ident>\S*) (?P<user>\S*) \[(?P<time>.*)\] "(?P<method>\S+)(?: +(?P<resource>\S*) +(?P<proto>\S*?))?" (?P<status>\S*) (?P<bytes>\S*)
+
+SAMPLE
+       152.120.218.99 - - [25/Jul/2020:12:25:54 +0900] "GET /category/books HTTP/1.1" 200 67
+```
