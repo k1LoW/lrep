@@ -33,6 +33,7 @@ import (
 
 	"github.com/k1LoW/regexq/format"
 	"github.com/k1LoW/regexq/format/json"
+	"github.com/k1LoW/regexq/format/ltsv"
 	"github.com/k1LoW/regexq/format/sqlite"
 	"github.com/k1LoW/regexq/parser"
 	"github.com/k1LoW/regexq/version"
@@ -68,6 +69,8 @@ var rootCmd = &cobra.Command{
 		switch fFormat {
 		case "json":
 			f = json.New()
+		case "ltsv":
+			f = ltsv.New()
 		case "sqlite":
 			f = sqlite.New()
 		default:
