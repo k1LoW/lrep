@@ -124,7 +124,7 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.Flags().StringVarP(&fFormat, "format", "f", "json", "formt")
+	rootCmd.Flags().StringVarP(&fFormat, "format", "t", "json", "output format")
 }
 
 // https://github.com/spf13/cobra/pull/894
