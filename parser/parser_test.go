@@ -51,7 +51,7 @@ func TestParse(t *testing.T) {
 			}),
 		},
 		{
-			regexp: `^(?P<host>.*?) (?P<ident>.*?) (?P<user>.*?) \[(?P<time>.*?)\] "(?P<method>\S+?)(?: +(?P<resource>.*?) +(?P<proto>\S*?))?" (?P<status>.*?) (?P<bytes>.*?) "(?P<referer>.*?)" "(?P<agent>.*?)"`,
+			regexp: `^(?P<host>\S*) (?P<ident>\S*) (?P<user>\S*) \[(?P<time>.*)\] "(?P<method>\S+)(?: +(?P<resource>\S*) +(?P<proto>\S*?))?" (?P<status>\S*) (?P<bytes>\S*) "(?P<referer>.*)" "(?P<agent>.*)"`,
 			line:   `152.120.218.99 - - [25/Jul/2020:12:25:54 +0900] "GET /category/books HTTP/1.1" 200 67 "/item/electronics/4234" "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)"`,
 			want: Parsed(map[string]string{
 				"m0":       `152.120.218.99 - - [25/Jul/2020:12:25:54 +0900] "GET /category/books HTTP/1.1" 200 67 "/item/electronics/4234" "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)"`,
