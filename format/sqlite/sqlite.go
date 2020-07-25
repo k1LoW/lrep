@@ -12,6 +12,7 @@ import (
 const defaultTableName = "lines"
 
 type Sqlite struct {
+	w         io.Writer
 	tableName string
 }
 
@@ -28,31 +29,32 @@ CREATE TABLE IF NOT EXISTS {{.TableName}} (
 `))
 )
 
-func New() *Sqlite {
+func New(w io.Writer) *Sqlite {
 	tableName := defaultTableName
 	if n := os.Getenv("REGEXQ_TABLE_NAME"); n != "" {
 		tableName = n
 	}
 	return &Sqlite{
+		w:         w,
 		tableName: tableName,
 	}
 }
 
-func (s *Sqlite) WriteSchema(w io.Writer, schema parser.Schema) error {
+func (s *Sqlite) WriteSchema(schema parser.Schema) error {
 	params := map[string]interface{}{
 		"TableName": s.tableName,
 		"Schema":    schema,
 	}
-	return tmplCreateTable.Execute(w, params)
+	return tmplCreateTable.Execute(s.w, params)
 }
 
-func (s *Sqlite) Write(w io.Writer, schema parser.Schema, in parser.Parsed) error {
+func (s *Sqlite) Write(schema parser.Schema, in parser.Parsed) error {
 	params := map[string]interface{}{
 		"TableName": s.tableName,
 		"In":        in,
 		"Schema":    schema,
 	}
-	return tmplInsert.Execute(w, params)
+	return tmplInsert.Execute(s.w, params)
 }
 
 func Funcs() map[string]interface{} {

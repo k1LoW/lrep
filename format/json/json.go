@@ -7,17 +7,22 @@ import (
 	"github.com/k1LoW/regexq/parser"
 )
 
-type JSON struct{}
-
-func New() *JSON {
-	return &JSON{}
+type JSON struct {
+	w io.Writer
+	e *json.Encoder
 }
 
-func (j *JSON) WriteSchema(w io.Writer, schema parser.Schema) error {
+func New(w io.Writer) *JSON {
+	return &JSON{
+		w: w,
+		e: json.NewEncoder(w),
+	}
+}
+
+func (j *JSON) WriteSchema(schema parser.Schema) error {
 	return nil
 }
 
-func (j *JSON) Write(w io.Writer, schema parser.Schema, in parser.Parsed) error {
-	e := json.NewEncoder(w)
-	return e.Encode(in)
+func (j *JSON) Write(schema parser.Schema, in parser.Parsed) error {
+	return j.e.Encode(in)
 }

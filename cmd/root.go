@@ -68,11 +68,11 @@ var rootCmd = &cobra.Command{
 
 		switch fFormat {
 		case "json":
-			f = json.New()
+			f = json.New(out)
 		case "ltsv":
-			f = ltsv.New()
+			f = ltsv.New(out)
 		case "sqlite":
-			f = sqlite.New()
+			f = sqlite.New(out)
 		default:
 			printFatalln(cmd, fmt.Errorf("unsupported format '%s'", fFormat))
 		}
@@ -80,7 +80,7 @@ var rootCmd = &cobra.Command{
 		p := parser.New(regexp)
 
 		schema := p.Schema()
-		if err := f.WriteSchema(out, schema); err != nil {
+		if err := f.WriteSchema(schema); err != nil {
 			printFatalln(cmd, err)
 		}
 
@@ -97,7 +97,7 @@ var rootCmd = &cobra.Command{
 				break L
 			default:
 				parsed := p.Parse(strings.TrimSuffix(s, "\n"))
-				if err := f.Write(out, schema, parsed); err != nil {
+				if err := f.Write(schema, parsed); err != nil {
 					printFatalln(cmd, err)
 				}
 			}
