@@ -41,7 +41,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var fFormat string
+var (
+	fFormat string
+	noM0    bool
+	noRaw   bool
+)
 
 var rootCmd = &cobra.Command{
 	Use:   "lrep [REGEXP]",
@@ -77,7 +81,15 @@ var rootCmd = &cobra.Command{
 			printFatalln(cmd, fmt.Errorf("unsupported format '%s'", fFormat))
 		}
 
-		p := parser.New(regexp)
+		opts := []parser.Option{}
+		if noM0 {
+			opts = append(opts, parser.NoM0())
+		}
+		if noRaw {
+			opts = append(opts, parser.NoRaw())
+		}
+
+		p := parser.New(regexp, opts...)
 
 		schema := p.Schema()
 		if err := f.WriteSchema(schema); err != nil {
@@ -125,6 +137,9 @@ func Execute() {
 
 func init() {
 	rootCmd.Flags().StringVarP(&fFormat, "format", "t", "json", "output format")
+
+	rootCmd.Flags().BoolVarP(&noM0, "no-m0", "", false, "ignore regexp submatch[0]")
+	rootCmd.Flags().BoolVarP(&noRaw, "no-raw", "", false, "ignore line raw data")
 }
 
 // https://github.com/spf13/cobra/pull/894

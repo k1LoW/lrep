@@ -51,11 +51,13 @@ func TestParse(t *testing.T) {
 			}),
 		},
 		{
-			regexp: `^(?P<host>.*?) .*? .*? \[(?P<time>.*?)\] "(?P<method>\S+?)(?: +(?P<resource>.*?) +(?P<proto>\S*?))?" (?P<status>.*?) (?P<bytes>.*?) "(?P<referer>.*?)" "(?P<agent>.*?)"`,
+			regexp: `^(?P<host>.*?) (?P<ident>.*?) (?P<user>.*?) \[(?P<time>.*?)\] "(?P<method>\S+?)(?: +(?P<resource>.*?) +(?P<proto>\S*?))?" (?P<status>.*?) (?P<bytes>.*?) "(?P<referer>.*?)" "(?P<agent>.*?)"`,
 			line:   `152.120.218.99 - - [25/Jul/2020:12:25:54 +0900] "GET /category/books HTTP/1.1" 200 67 "/item/electronics/4234" "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)"`,
 			want: Parsed(map[string]string{
 				"m0":       `152.120.218.99 - - [25/Jul/2020:12:25:54 +0900] "GET /category/books HTTP/1.1" 200 67 "/item/electronics/4234" "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)"`,
 				"host":     "152.120.218.99",
+				"ident":    "-",
+				"user":     "-",
 				"time":     "25/Jul/2020:12:25:54 +0900",
 				"method":   "GET",
 				"resource": "/category/books",
@@ -72,6 +74,52 @@ func TestParse(t *testing.T) {
 		p := New(tt.regexp)
 		got := p.Parse(tt.line)
 		if diff := cmp.Diff(got, tt.want, nil); diff != "" {
+			t.Errorf("%s", diff)
+		}
+	}
+}
+
+func TestNoM0(t *testing.T) {
+	tests := []struct {
+		regexp     string
+		line       string
+		wantSchema Schema
+		wantParsed Parsed
+	}{
+		{"(a+)b(c)", "aabc", Schema([]string{"m1", "m2", "_raw"}), Parsed(map[string]string{"m1": "aa", "m2": "c", "_raw": "aabc"})},
+	}
+	for _, tt := range tests {
+		p := New(tt.regexp, NoM0())
+		got := p.Schema()
+		if diff := cmp.Diff(got, tt.wantSchema, nil); diff != "" {
+			t.Errorf("%s", diff)
+		}
+
+		gotp := p.Parse(tt.line)
+		if diff := cmp.Diff(gotp, tt.wantParsed, nil); diff != "" {
+			t.Errorf("%s", diff)
+		}
+	}
+}
+
+func TestNoRaw(t *testing.T) {
+	tests := []struct {
+		regexp     string
+		line       string
+		wantSchema Schema
+		wantParsed Parsed
+	}{
+		{"(a+)b(c)", "aabc", Schema([]string{"m0", "m1", "m2"}), Parsed(map[string]string{"m0": "aabc", "m1": "aa", "m2": "c"})},
+	}
+	for _, tt := range tests {
+		p := New(tt.regexp, NoRaw())
+		got := p.Schema()
+		if diff := cmp.Diff(got, tt.wantSchema, nil); diff != "" {
+			t.Errorf("%s", diff)
+		}
+
+		gotp := p.Parse(tt.line)
+		if diff := cmp.Diff(gotp, tt.wantParsed, nil); diff != "" {
 			t.Errorf("%s", diff)
 		}
 	}
