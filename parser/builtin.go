@@ -7,6 +7,11 @@ type Builtin struct {
 }
 
 var Builtins = map[string]Builtin{
+	"common": Builtin{
+		`^(?P<host>\S*) (?P<ident>\S*) (?P<user>\S*) \[(?P<time>.*)\] "(?P<method>\S+)(?: +(?P<resource>\S*) +(?P<proto>\S*?))?" (?P<status>\S*) (?P<bytes>\S*)`,
+		"Common Log Format",
+		`152.120.218.99 - - [25/Jul/2020:12:25:54 +0900] "GET /category/books HTTP/1.1" 200 67`,
+	},
 	"combined": Builtin{
 		`^(?P<host>\S*) (?P<ident>\S*) (?P<user>\S*) \[(?P<time>.*)\] "(?P<method>\S+)(?: +(?P<resource>\S*) +(?P<proto>\S*?))?" (?P<status>\S*) (?P<bytes>\S*) "(?P<referer>.*)" "(?P<agent>.*)"`,
 		"Combined Log Format",
