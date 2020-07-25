@@ -111,3 +111,22 @@ The query can be passed directly to SQLite.
 ``` console
 $ tail -f /var/log/access.log | lrep -t sqlite '^(?P<host>\S*) \S* \S* \[(?P<time>.*)\] "(?P<request>.*)" (?P<status>\S*) (?P<bytes>\S*)' | sqlite3 lines.db
 ```
+
+### Built-in regexp patterns
+
+`lrep` has some [built-in regexp patterns](https://github.com/k1LoW/lrep/blob/master/parser/builtin.go).
+
+``` console
+$ tail -f /var/log/access.log | lrep --combined
+{"_raw":"96.207.52.179 - - [25/Jul/2020:17:32:09 +0900] \"GET /item/jewelry/1307 HTTP/1.1\" 200 112 \"/category/software\" \"Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)\"","agent":"Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)","bytes":"112","host":"96.207.52.179","ident":"-","m0":"96.207.52.179 - - [25/Jul/2020:17:32:09 +0900] \"GET /item/jewelry/1307 HTTP/1.1\" 200 112 \"/category/software\" \"Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)\"","method":"GET","proto":"HTTP/1.1","referer":"/category/software","resource":"/item/jewelry/1307","status":"200","time":"25/Jul/2020:17:32:09 +0900","user":"-"}
+{"_raw":"168.132.101.209 - - [25/Jul/2020:17:32:09 +0900] \"GET /category/books HTTP/1.1\" 200 127 \"-\" \"Mozilla/5.0 (Windows NT 6.0; rv:10.0.1) Gecko/20100101 Firefox/10.0.1\"","agent":"Mozilla/5.0 (Windows NT 6.0; rv:10.0.1) Gecko/20100101 Firefox/10.0.1","bytes":"127","host":"168.132.101.209","ident":"-","m0":"168.132.101.209 - - [25/Jul/2020:17:32:09 +0900] \"GET /category/books HTTP/1.1\" 200 127 \"-\" \"Mozilla/5.0 (Windows NT 6.0; rv:10.0.1) Gecko/20100101 Firefox/10.0.1\"","method":"GET","proto":"HTTP/1.1","referer":"-","resource":"/category/books","status":"200","time":"25/Jul/2020:17:32:09+0900","user":"-"}
+{"_raw":"188.204.198.141 - - [25/Jul/2020:17:32:09 +0900] \"GET /item/software/4286 HTTP/1.1\" 200 85 \"/category/office\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6; rv:9.0.1) Gecko/20100101 Firefox/9.0.1\"","agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6; rv:9.0.1) Gecko/20100101 Firefox/9.0.1","bytes":"85","host":"188.204.198.141","ident":"-","m0":"188.204.198.141 - - [25/Jul/2020:17:32:09 +0900] \"GET /item/software/4286 HTTP/1.1\" 200 85 \"/category/office\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6; rv:9.0.1) Gecko/20100101 Firefox/9.0.1\"","method":"GET","proto":"HTTP/1.1","referer":"/category/office","resource":"/item/software/4286","status":"200","time":"25/Jul/2020:17:32:09 +0900","user":"-"}
+{"_raw":"52.228.115.218 - - [25/Jul/2020:17:32:10 +0900] \"GET /item/electronics/2355 HTTP/1.1\" 200 123 \"/category/office?from=10\" \"Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; YTB730; GTB7.2; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; .NET4.0C; .NET4.0E; Media Center PC 6.0)\"","agent":"Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; YTB730; GTB7.2; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; .NET4.0C; .NET4.0E; Media Center PC 6.0)","bytes":"123","host":"52.228.115.218","ident":"-","m0":"52.228.115.218 - - [25/Jul/2020:17:32:10 +0900] \"GET /item/electronics/2355 HTTP/1.1\" 200 123 \"/category/office?from=10\" \"Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; YTB730; GTB7.2; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; .NET4.0C; .NET4.0E; Media Center PC 6.0)\"","method":"GET","proto":"HTTP/1.1","referer":"/category/office?from=10","resource":"/item/electronics/2355","status":"200","time":"25/Jul/2020:17:32:10 +0900","user":"-"}
+[...]
+```
+
+| built-in regexp | description |
+| --- | --- |
+| `common` | Common Log Format |
+| `combined` | Combined Log Format |
+| `postgresql` | PostgreSQL log |
