@@ -124,7 +124,7 @@ INSERT INTO lines(host, time, request, status, bytes, _raw, created) VALUES ('22
 The query can be passed directly to SQLite.
 
 ``` console
-$ tail -f /var/log/access.log | lrep -t sqlite '^(?P<host>\S*) \S* \S* \[(?P<time>.*)\] "(?P<request>.*)" (?P<status>\S*) (?P<bytes>\S*)' | sqlite3 lines.db
+$ tail -f /var/log/access.log | lrep -t sqlite --common | sqlite3 lines.db
 ```
 
 ### Built-in regexp patterns
