@@ -137,6 +137,11 @@ func Execute() {
 
 func init() {
 	rootCmd.Flags().StringVarP(&fFormat, "format", "t", "json", "output format")
+	if err := rootCmd.RegisterFlagCompletionFunc("format", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return []string{"json", "ltsv", "sqlite"}, cobra.ShellCompDirectiveDefault
+	}); err != nil {
+		printFatalln(rootCmd, err)
+	}
 
 	rootCmd.Flags().BoolVarP(&noM0, "no-m0", "", false, "ignore regexp submatches[0]")
 	rootCmd.Flags().BoolVarP(&noRaw, "no-raw", "", false, "ignore line raw data")
