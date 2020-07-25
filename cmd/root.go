@@ -32,12 +32,15 @@ import (
 	"strings"
 
 	"github.com/k1LoW/regexq/format"
+	"github.com/k1LoW/regexq/format/json"
 	"github.com/k1LoW/regexq/format/sqlite"
 	"github.com/k1LoW/regexq/parser"
 	"github.com/k1LoW/regexq/version"
 	"github.com/mattn/go-isatty"
 	"github.com/spf13/cobra"
 )
+
+var fFormat string
 
 var rootCmd = &cobra.Command{
 	Use:   "regexq [REGEXP]",
@@ -61,7 +64,16 @@ var rootCmd = &cobra.Command{
 
 		in := bufio.NewReader(os.Stdin)
 		out := os.Stdout
-		f = sqlite.New()
+
+		switch fFormat {
+		case "json":
+			f = json.New()
+		case "sqlite":
+			f = sqlite.New()
+		default:
+			printFatalln(cmd, fmt.Errorf("unsupported format '%s'", fFormat))
+		}
+
 		p := parser.New(regexp)
 
 		schema := p.Schema()
@@ -108,7 +120,9 @@ func Execute() {
 	}
 }
 
-func init() {}
+func init() {
+	rootCmd.Flags().StringVarP(&fFormat, "format", "f", "json", "formt")
+}
 
 // https://github.com/spf13/cobra/pull/894
 func printErrln(c *cobra.Command, i ...interface{}) {
