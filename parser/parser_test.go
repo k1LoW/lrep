@@ -82,9 +82,11 @@ func TestParse(t *testing.T) {
 func TestBuiltin(t *testing.T) {
 	for n, r := range Builtins {
 		p := New(r.Regexp)
-		got := p.Parse(r.Sample)
-		if got["m0"] == "" {
-			t.Errorf("builtin regexp `%s` can not parse sample", n)
+		for _, s := range r.Samples {
+			got := p.Parse(s)
+			if got["m0"] == "" {
+				t.Errorf("builtin regexp `%s` can not parse sample", n)
+			}
 		}
 	}
 }
