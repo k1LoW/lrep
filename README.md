@@ -1,4 +1,4 @@
-# lrep
+# lrep [![Build Status](https://github.com/k1LoW/lrep/workflows/build/badge.svg)](https://github.com/k1LoW/lrep/actions) [![GitHub release](https://img.shields.io/github/release/k1LoW/lrep.svg)](https://github.com/k1LoW/lrep/releases)
 
 l/re/p = line regular expression parser
 
