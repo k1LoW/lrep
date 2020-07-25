@@ -138,7 +138,7 @@ func Execute() {
 func init() {
 	rootCmd.Flags().StringVarP(&fFormat, "format", "t", "json", "output format")
 
-	rootCmd.Flags().BoolVarP(&noM0, "no-m0", "", false, "ignore regexp submatch[0]")
+	rootCmd.Flags().BoolVarP(&noM0, "no-m0", "", false, "ignore regexp submatches[0]")
 	rootCmd.Flags().BoolVarP(&noRaw, "no-raw", "", false, "ignore line raw data")
 }
 
