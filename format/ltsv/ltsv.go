@@ -22,13 +22,13 @@ func (l *LTSV) WriteSchema(schema parser.Schema) error {
 
 func (l *LTSV) Write(schema parser.Schema, in parser.Parsed) error {
 	first := true
-	for k, v := range in {
+	for _, k := range schema {
 		if !first {
 			if _, err := l.w.Write([]byte("\t")); err != nil {
 				return err
 			}
 		}
-		if _, err := l.w.Write([]byte(k + ":" + v)); err != nil {
+		if _, err := l.w.Write([]byte(k + ":" + in[k])); err != nil {
 			return err
 		}
 		first = false
