@@ -29,6 +29,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/k1LoW/lrep/format"
@@ -42,6 +43,7 @@ import (
 )
 
 var (
+	file    string
 	fFormat string
 	noM0    bool
 	noRaw   bool
@@ -55,19 +57,34 @@ var rootCmd = &cobra.Command{
 		if len(args) != 1 {
 			return fmt.Errorf("accepts %d arg(s), received %d", 1, len(args))
 		}
-		if isatty.IsTerminal(os.Stdin.Fd()) {
-			return fmt.Errorf("%s need STDIN. Please use pipe", version.Name)
+		if (isatty.IsTerminal(os.Stdin.Fd()) && file == "") || (!isatty.IsTerminal(os.Stdin.Fd()) && file != "") {
+			return fmt.Errorf("%s need either target file(--file) or STDIN", version.Name)
 		}
 		return nil
 	},
 	Version: version.Version,
 	Run: func(cmd *cobra.Command, args []string) {
-		var f format.Formatter
+		var (
+			in *bufio.Reader
+			f  format.Formatter
+		)
 		regexp := args[0]
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
-		in := bufio.NewReader(os.Stdin)
+		if file != "" {
+			fi, err := os.Open(filepath.Clean(file))
+			if err != nil {
+				printFatalln(cmd, err)
+			}
+			defer func() {
+				_ = fi.Close()
+			}()
+			in = bufio.NewReader(fi)
+		} else {
+			in = bufio.NewReader(os.Stdin)
+		}
+
 		out := os.Stdout
 
 		switch fFormat {
@@ -136,6 +153,8 @@ func Execute() {
 }
 
 func init() {
+	rootCmd.Flags().StringVarP(&file, "file", "f", "", "input file")
+
 	rootCmd.Flags().StringVarP(&fFormat, "format", "t", "json", "output format")
 	if err := rootCmd.RegisterFlagCompletionFunc("format", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return []string{"json", "ltsv", "sqlite"}, cobra.ShellCompDirectiveDefault
