@@ -17,8 +17,7 @@ type Sqlite struct {
 }
 
 var (
-	tmplCreateTable = template.Must(template.New("schema").Parse(`
-CREATE TABLE IF NOT EXISTS {{.TableName}} (
+	tmplCreateTable = template.Must(template.New("schema").Parse(`CREATE TABLE IF NOT EXISTS {{.TableName}} (
   id INTEGER PRIMARY KEY AUTOINCREMENT,{{range $i, $value := .Schema}}
   {{$value}} TEXT,{{end}}
   created NUMERIC NOT NULL
