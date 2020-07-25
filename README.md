@@ -7,7 +7,7 @@ l/re/p = line regular expression parser
 `lrep` converts a single-line string into structured data by using the regular expression capture groups as fields.
 
 ``` console
-$ tail -F /var/log/access.log | lrep '^(\S*) \S* \S* \[(.*)\] "(.*)" (\S*) (\S*)'
+$ tail -f /var/log/access.log | lrep '^(\S*) \S* \S* \[(.*)\] "(.*)" (\S*) (\S*)'
 {"_raw":"100.21.169.226 - - [25/Jul/2020:16:25:05 +0900] \"GET /category/electronics HTTP/1.1\" 200 114","m0":"100.21.169.226 - - [25/Jul/2020:16:25:05 +0900] \"GET /category/electronics HTTP/1.1\" 200 114","m1":"100.21.169.226","m2":"25/Jul/2020:16:25:05 +0900","m3":"GET /category/electronics HTTP/1.1","m4":"200","m5":"114"}
 {"_raw":"104.141.81.229 - - [25/Jul/2020:16:25:05 +0900] \"GET /item/office/1680 HTTP/1.1\" 200 49","m0":"104.141.81.229 - - [25/Jul/2020:16:25:05 +0900] \"GET /item/office/1680 HTTP/1.1\" 200 49","m1":"104.141.81.229","m2":"25/Jul/2020:16:25:05 +0900","m3":"GET /item/office/1680 HTTP/1.1","m4":"200","m5":"49"}
 {"_raw":"132.189.225.189 - - [25/Jul/2020:16:25:05 +0900] \"GET /category/office HTTP/1.1\" 200 97","m0":"132.189.225.189 - - [25/Jul/2020:16:25:05 +0900] \"GET /category/office HTTP/1.1\" 200 97","m1":"132.189.225.189","m2":"25/Jul/2020:16:25:05 +0900","m3":"GET /category/office HTTP/1.1","m4":"200","m5":"97"}
