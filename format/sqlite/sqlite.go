@@ -22,8 +22,7 @@ var (
   {{$value}} TEXT,{{end}}
   created NUMERIC NOT NULL
 );
-{{range $i, $value := .Schema}}CREATE INDEX {{$.TableName}}_{{$value}}_idx ON {{$.TableName}}({{$value}});
-{{end}}`))
+`))
 	tmplInsert = template.Must(template.New("insert").Funcs(Funcs()).Parse(`INSERT INTO {{.TableName}}({{range $i, $value := .Schema}}{{$value}}, {{end}}created) VALUES ({{range $i, $value := .Schema}}'{{index $.In $value | escape_str}}', {{end}}datetime('now'));
 `))
 )
