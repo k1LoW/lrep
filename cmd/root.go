@@ -45,8 +45,8 @@ var fFormat string
 
 var rootCmd = &cobra.Command{
 	Use:   "lrep [REGEXP]",
-	Short: "lrep",
-	Long:  `lrep.`,
+	Short: "line regular expression parser",
+	Long:  `line regular expression parser.`,
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) != 1 {
 			return fmt.Errorf("accepts %d arg(s), received %d", 1, len(args))
