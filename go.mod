@@ -1,4 +1,4 @@
-module github.com/k1LoW/regexq
+module github.com/k1LoW/lrep
 
 go 1.13
 

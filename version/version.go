@@ -1,7 +1,7 @@
 package version
 
 // Name for this
-const Name string = "regexq"
+const Name string = "lrep"
 
 // Version for this
 var Version = "dev"

@@ -21,7 +21,7 @@ THE SOFTWARE.
 */
 package main
 
-import "github.com/k1LoW/regexq/cmd"
+import "github.com/k1LoW/lrep/cmd"
 
 func main() {
   cmd.Execute()

@@ -1,7 +1,7 @@
 package format
 
 import (
-	"github.com/k1LoW/regexq/parser"
+	"github.com/k1LoW/lrep/parser"
 )
 
 type Formatter interface {

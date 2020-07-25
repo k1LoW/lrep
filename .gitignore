@@ -2,4 +2,4 @@
 dist/
 coverage.txt
 *.debug
-regexq
+lrep

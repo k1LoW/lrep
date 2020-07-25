@@ -21,7 +21,7 @@ type Parser struct {
 // New return Parser
 func New(regex string) *Parser {
 	rawKey := defaultRawKey
-	if k := os.Getenv("REGEXQ_RAW_KEY"); k != "" {
+	if k := os.Getenv("LREP_RAW_KEY"); k != "" {
 		rawKey = k
 	}
 	re := regexp.MustCompile(regex)

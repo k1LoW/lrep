@@ -6,7 +6,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/k1LoW/regexq/parser"
+	"github.com/k1LoW/lrep/parser"
 )
 
 const defaultTableName = "lines"
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS {{.TableName}} (
 
 func New(w io.Writer) *Sqlite {
 	tableName := defaultTableName
-	if n := os.Getenv("REGEXQ_TABLE_NAME"); n != "" {
+	if n := os.Getenv("LREP_TABLE_NAME"); n != "" {
 		tableName = n
 	}
 	return &Sqlite{

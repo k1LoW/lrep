@@ -31,12 +31,12 @@ import (
 	"os"
 	"strings"
 
-	"github.com/k1LoW/regexq/format"
-	"github.com/k1LoW/regexq/format/json"
-	"github.com/k1LoW/regexq/format/ltsv"
-	"github.com/k1LoW/regexq/format/sqlite"
-	"github.com/k1LoW/regexq/parser"
-	"github.com/k1LoW/regexq/version"
+	"github.com/k1LoW/lrep/format"
+	"github.com/k1LoW/lrep/format/json"
+	"github.com/k1LoW/lrep/format/ltsv"
+	"github.com/k1LoW/lrep/format/sqlite"
+	"github.com/k1LoW/lrep/parser"
+	"github.com/k1LoW/lrep/version"
 	"github.com/mattn/go-isatty"
 	"github.com/spf13/cobra"
 )
@@ -44,9 +44,9 @@ import (
 var fFormat string
 
 var rootCmd = &cobra.Command{
-	Use:   "regexq [REGEXP]",
-	Short: "regexq",
-	Long:  `regexq.`,
+	Use:   "lrep [REGEXP]",
+	Short: "lrep",
+	Long:  `lrep.`,
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) != 1 {
 			return fmt.Errorf("accepts %d arg(s), received %d", 1, len(args))

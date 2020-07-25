@@ -3,7 +3,7 @@ package ltsv
 import (
 	"io"
 
-	"github.com/k1LoW/regexq/parser"
+	"github.com/k1LoW/lrep/parser"
 )
 
 type LTSV struct {

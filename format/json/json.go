@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"io"
 
-	"github.com/k1LoW/regexq/parser"
+	"github.com/k1LoW/lrep/parser"
 )
 
 type JSON struct {
