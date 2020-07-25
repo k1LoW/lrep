@@ -22,6 +22,7 @@ THE SOFTWARE.
 package cmd
 
 import (
+	"fmt"
 	"os"
 	"text/template"
 
@@ -45,8 +46,14 @@ var builtinCmd = &cobra.Command{
 	}(),
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
+			maxlen := 0
+			for n := range parser.Builtins {
+				if len(n) > maxlen {
+					maxlen = len(n)
+				}
+			}
 			for n, r := range parser.Builtins {
-				cmd.Printf("%s\t%s\n", n, r.Desc)
+				cmd.Printf(fmt.Sprintf("%%-%ds   %%s\n", maxlen), n, r.Desc)
 			}
 			return
 		}
