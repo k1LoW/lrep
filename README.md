@@ -143,9 +143,9 @@ You can check the built-in regxp patterns by `lrep builtin` command.
 
 ``` console
 $ lrep builtin
-common  Common Log Format
-combined        Combined Log Format
-postgresql      PostgreSQL log
+common       Common Log Format
+combined     Combined Log Format
+postgresql   PostgreSQL log
 $ lrep builtin common
 NAME
        common -- Common Log Format
