@@ -24,6 +24,7 @@ package cmd
 import (
 	"bufio"
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -43,6 +44,7 @@ import (
 )
 
 var (
+	regexp  string
 	file    string
 	fFormat string
 	noM0    bool
@@ -54,9 +56,25 @@ var rootCmd = &cobra.Command{
 	Short: "line regular expression parser",
 	Long:  `line regular expression parser.`,
 	Args: func(cmd *cobra.Command, args []string) error {
-		if len(args) != 1 {
+		for n, r := range parser.Builtins {
+			bool, err := cmd.Flags().GetBool(n)
+			if err != nil {
+				return err
+			}
+			if bool {
+				if regexp != "" {
+					return errors.New("only one built-in regexp can be selected")
+				}
+				regexp = r.Regexp
+			}
+		}
+		if len(args) == 1 && regexp != "" {
+			return errors.New("select either an argument or a built-in regexp")
+		}
+		if len(args) != 1 && regexp == "" {
 			return fmt.Errorf("accepts %d arg(s), received %d", 1, len(args))
 		}
+
 		if (isatty.IsTerminal(os.Stdin.Fd()) && file == "") || (!isatty.IsTerminal(os.Stdin.Fd()) && file != "") {
 			return fmt.Errorf("%s need either target file(--file) or STDIN", version.Name)
 		}
@@ -68,7 +86,9 @@ var rootCmd = &cobra.Command{
 			in *bufio.Reader
 			f  format.Formatter
 		)
-		regexp := args[0]
+		if len(args) > 0 {
+			regexp = args[0]
+		}
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -160,6 +180,10 @@ func init() {
 		return []string{"json", "ltsv", "sqlite"}, cobra.ShellCompDirectiveDefault
 	}); err != nil {
 		printFatalln(rootCmd, err)
+	}
+
+	for n, r := range parser.Builtins {
+		rootCmd.Flags().BoolP(n, "", false, fmt.Sprintf("[build-in regexp] %s", r.Desc))
 	}
 
 	rootCmd.Flags().BoolVarP(&noM0, "no-m0", "", false, "ignore regexp submatches[0]")
