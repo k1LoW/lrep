@@ -71,7 +71,41 @@ $ tail -f /var/log/access.log | lrep --no-m0 --no-raw '^(?P<host>\S*) \S* \S* \[
 [...]
 ```
 
-### Support output format
+## Install
+
+**deb:**
+
+Use [dpkg-i-from-url](https://github.com/k1LoW/dpkg-i-from-url)
+
+``` console
+$ export LREP_VERSION=X.X.X
+$ curl -L https://git.io/dpkg-i-from-url | bash -s -- https://github.com/k1LoW/lrep/releases/download/v$LREP_VERSION/lrep_$LREP_VERSION-1_amd64.deb
+```
+
+**RPM:**
+
+``` console
+$ export LREP_VERSION=X.X.X
+$ yum install https://github.com/k1LoW/lrep/releases/download/v$LREP_VERSION/lrep_$LREP_VERSION-1_amd64.rpm
+```
+
+**homebrew tap:**
+
+```console
+$ brew install k1LoW/tap/lrep
+```
+
+**manually:**
+
+Download binary from [releases page](https://github.com/k1LoW/lrep/releases)
+
+**go get:**
+
+```console
+$ go get github.com/k1LoW/lrep
+```
+
+## Support output format
 
 `lrep` supports some output formats.
 
@@ -127,7 +161,7 @@ The query can be passed directly to SQLite.
 $ tail -f /var/log/access.log | lrep -t sqlite --common | sqlite3 lines.db
 ```
 
-### Built-in regexp patterns
+## Built-in regexp patterns
 
 `lrep` has some [built-in regexp patterns](https://github.com/k1LoW/lrep/blob/master/parser/builtin.go).
 
