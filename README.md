@@ -155,10 +155,10 @@ INSERT INTO lines(host, time, request, status, bytes, _raw, created) VALUES ('22
 [...]
 ```
 
-The query can be passed directly to SQLite.
+The query can be passed directly to `sqlite3` command.
 
 ``` console
-$ tail -f /var/log/access.log | lrep -t sqlite --common | sqlite3 lines.db
+$ cat /var/log/access.log | lrep -t sqlite --common | sqlite3 lines.db
 ```
 
 ## Built-in regexp patterns
