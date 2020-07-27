@@ -34,6 +34,7 @@ import (
 	"strings"
 
 	"github.com/k1LoW/lrep/format"
+	"github.com/k1LoW/lrep/format/csv"
 	"github.com/k1LoW/lrep/format/json"
 	"github.com/k1LoW/lrep/format/ltsv"
 	"github.com/k1LoW/lrep/format/sqlite"
@@ -112,6 +113,8 @@ var rootCmd = &cobra.Command{
 			f = json.New(out)
 		case "ltsv":
 			f = ltsv.New(out)
+		case "csv":
+			f = csv.New(out)
 		case "sqlite":
 			f = sqlite.New(out)
 		default:
@@ -177,7 +180,7 @@ func init() {
 
 	rootCmd.Flags().StringVarP(&fFormat, "format", "t", "json", "output format")
 	if err := rootCmd.RegisterFlagCompletionFunc("format", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-		return []string{"json", "ltsv", "sqlite"}, cobra.ShellCompDirectiveDefault
+		return []string{"json", "ltsv", "csv", "sqlite"}, cobra.ShellCompDirectiveDefault
 	}); err != nil {
 		printFatalln(rootCmd, err)
 	}
