@@ -161,6 +161,32 @@ The query can be passed directly to `sqlite3` command.
 $ cat /var/log/access.log | lrep -t sqlite --common | sqlite3 lines.db
 ```
 
+**CSV (`csv`):**
+
+``` console
+$ lrep -f /var/log/access.log -t csv --combined
+host,ident,user,time,method,resource,proto,status,bytes,referer,agent
+40.222.173.129,-,-,27/Jul/2020:23:40:41 +0900,GET,/category/software,HTTP/1.1,200,95,-,Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)
+212.39.190.208,-,-,27/Jul/2020:23:40:41 +0900,GET,/category/networking,HTTP/1.1,200,118,-,Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; YTB730; GTB7.2; EasyBits GO v1.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.
+0.30729; Media Center PC 6.0; .NET4.0C)
+128.216.47.99,-,-,27/Jul/2020:23:40:41 +0900,GET,/category/electronics,HTTP/1.1,200,50,/category/electronics,Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)
+212.183.71.55,-,-,27/Jul/2020:23:40:41 +0900,GET,/category/jewelry,HTTP/1.1,200,128,-,"Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.46 Safari/535.11"
+[...]
+```
+
+**TSV (`tsv`):**
+
+``` console
+$ lrep -f /var/log/access.log -t tsv --combined
+host    ident   user    time    method  resource        proto   status  bytes   referer agent
+52.138.203.201  -       -       27/Jul/2020:23:42:05 +0900      GET     /item/networking/778    HTTP/1.1        200     115     /category/electronics   Mozilla/5.0 (Windows NT 6.0; rv:10.0.1) Gecko/20100101 Firefox/10.0.1
+128.156.177.44  -       -       27/Jul/2020:23:42:05 +0900      GET     /category/electronics   HTTP/1.1        200     110     -       Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.77 Safari/535.7
+68.111.118.174  -       -       27/Jul/2020:23:42:05 +0900      GET     /category/books HTTP/1.1        200     60      /category/software?from=10      Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6; rv:9.0.1) Gecko/20100101 Firefox/9.0.1
+108.24.27.92    -       -       27/Jul/2020:23:42:05 +0900      GET     /category/games?from=10 HTTP/1.1        200     87      /category/games Mozilla/5.0 (Windows NT 6.0; rv:10.0.1) Gecko/20100101 Firefox/10.0.1
+192.150.55.131  -       -       27/Jul/2020:23:42:06 +0900      GET     /category/electronics   HTTP/1.1        200     135     -       Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)
+[...]
+```
+
 ## Built-in regexp patterns
 
 `lrep` has some [built-in regexp patterns](https://github.com/k1LoW/lrep/blob/master/parser/builtin.go).
