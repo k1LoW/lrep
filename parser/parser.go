@@ -4,18 +4,32 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"strings"
+	"time"
+
+	"github.com/itchyny/timefmt-go"
 )
 
 const defaultRawKey = "_raw"
 
-type Schema []string
+type Schema struct {
+	Keys  []string
+	TSKey string
+}
 
-type Parsed map[string]string
+type Parsed struct {
+	KVs     map[string]string
+	TSKey   string
+	TSValue time.Time
+}
 
 type Parser struct {
-	re     *regexp.Regexp
-	schema Schema
-	rawKey string
+	re       *regexp.Regexp
+	schema   Schema
+	rawKey   string
+	tsParser func(layout, value string) (time.Time, error)
+	tsKey    string
+	tsFormat string
 
 	noM0  bool
 	noRaw bool
@@ -36,6 +50,18 @@ func NoRaw() Option {
 	}
 }
 
+func TSKey(tsKey string) Option {
+	return func(p *Parser) {
+		p.tsKey = tsKey
+	}
+}
+
+func TSFormat(tsFormat string) Option {
+	return func(p *Parser) {
+		p.tsFormat = tsFormat
+	}
+}
+
 // New return Parser
 func New(regex string, opts ...Option) *Parser {
 	rawKey := defaultRawKey
@@ -50,33 +76,56 @@ func New(regex string, opts ...Option) *Parser {
 	for _, opt := range opts {
 		opt(p)
 	}
-	schema := re.SubexpNames()
-	for i := range schema {
-		if schema[i] == "" {
-			schema[i] = fmt.Sprintf("m%d", i)
+	now := time.Now().Format("2006-01-02")
+	if strings.Contains(p.tsFormat, "%") {
+		p.tsFormat = fmt.Sprintf("%%F %s", p.tsFormat)
+		p.tsParser = func(layout, value string) (time.Time, error) {
+			return timefmt.Parse(fmt.Sprintf("%s %s", now, value), layout)
+		}
+	} else {
+		p.tsFormat = fmt.Sprintf("2006-01-02 %s", p.tsFormat)
+		p.tsParser = func(layout, value string) (time.Time, error) {
+			return time.Parse(layout, fmt.Sprintf("%s %s", now, value))
+		}
+	}
+
+	keys := re.SubexpNames()
+	for i := range keys {
+		if keys[i] == "" {
+			keys[i] = fmt.Sprintf("m%d", i)
 		}
 	}
 	if !p.noRaw {
-		schema = append(schema, rawKey)
+		keys = append(keys, rawKey)
 	}
-	p.schema = schema
+	p.schema = Schema{
+		Keys:  keys,
+		TSKey: p.tsKey,
+	}
 	return p
 }
 
 // Parse string
 func (p *Parser) Parse(in string) Parsed {
 	m := p.re.FindStringSubmatch(in)
-	psd := Parsed(make(map[string]string, len(p.schema)))
+	psd := Parsed{
+		KVs:   make(map[string]string, len(p.schema.Keys)),
+		TSKey: p.tsKey,
+	}
 	if len(m) > 0 {
 		for i, v := range m {
 			if i == 0 && p.noM0 {
 				continue
 			}
-			psd[p.schema[i]] = v
+			psd.KVs[p.schema.Keys[i]] = v
 		}
 	}
 	if !p.noRaw {
-		psd[p.rawKey] = in
+		psd.KVs[p.rawKey] = in
+	}
+	if p.haveTS() {
+		t, _ := p.tsParser(p.tsFormat, psd.KVs[p.tsKey])
+		psd.TSValue = t
 	}
 	return psd
 }
@@ -84,7 +133,14 @@ func (p *Parser) Parse(in string) Parsed {
 // Schema return schema
 func (p *Parser) Schema() Schema {
 	if p.noM0 {
-		return p.schema[1:]
+		return Schema{
+			Keys:  p.schema.Keys[1:],
+			TSKey: p.schema.TSKey,
+		}
 	}
 	return p.schema
+}
+
+func (p *Parser) haveTS() bool {
+	return p.tsKey != ""
 }

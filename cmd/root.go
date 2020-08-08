@@ -49,6 +49,8 @@ var (
 	regexp  string
 	file    string
 	fFormat string
+	tKey    string
+	tFormat string
 	noM0    bool
 	noRaw   bool
 )
@@ -64,10 +66,12 @@ var rootCmd = &cobra.Command{
 				return err
 			}
 			if bool {
-				if regexp != "" {
+				if regexp != "" || tKey != "" || tFormat != "" {
 					return errors.New("only one built-in regexp can be selected")
 				}
 				regexp = r.Regexp
+				tKey = r.TSKey
+				tFormat = r.TSFormat
 			}
 		}
 		if len(args) == 1 && regexp != "" {
@@ -124,7 +128,7 @@ var rootCmd = &cobra.Command{
 			printFatalln(cmd, fmt.Errorf("unsupported format '%s'", fFormat))
 		}
 
-		opts := []parser.Option{}
+		opts := []parser.Option{parser.TSKey(tKey), parser.TSFormat(tFormat)}
 		if noM0 {
 			opts = append(opts, parser.NoM0())
 		}
@@ -192,6 +196,8 @@ func init() {
 		rootCmd.Flags().BoolP(n, "", false, fmt.Sprintf("[build-in regexp] %s", r.Desc))
 	}
 
+	rootCmd.Flags().StringVarP(&tKey, "ts-key", "k", "", "timestamp field key name")
+	rootCmd.Flags().StringVarP(&tFormat, "ts-format", "T", "", "timestamp format")
 	rootCmd.Flags().BoolVarP(&noM0, "no-m0", "", false, "ignore regexp submatches[0]")
 	rootCmd.Flags().BoolVarP(&noRaw, "no-raw", "", false, "ignore line raw data")
 }

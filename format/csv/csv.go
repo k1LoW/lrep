@@ -20,7 +20,7 @@ func New(w io.Writer) *CSV {
 
 func (l *CSV) WriteSchema(schema parser.Schema) error {
 	first := true
-	for _, k := range schema {
+	for _, k := range schema.Keys {
 		if !first {
 			if _, err := l.w.Write([]byte(",")); err != nil {
 				return err
@@ -39,14 +39,14 @@ func (l *CSV) WriteSchema(schema parser.Schema) error {
 
 func (l *CSV) Write(schema parser.Schema, in parser.Parsed) error {
 	first := true
-	for _, k := range schema {
+	for _, k := range schema.Keys {
 		if !first {
 			if _, err := l.w.Write([]byte(",")); err != nil {
 				return err
 			}
 		}
-		escaped := strings.ReplaceAll(in[k], `"`, `""`)
-		if strings.ContainsAny(in[k], "\r\n,\"") {
+		escaped := strings.ReplaceAll(in.KVs[k], `"`, `""`)
+		if strings.ContainsAny(in.KVs[k], "\r\n,\"") {
 			escaped = fmt.Sprintf(`"%s"`, escaped)
 		}
 		if _, err := l.w.Write([]byte(escaped)); err != nil {
