@@ -41,7 +41,7 @@ func New(w io.Writer) *Sqlite {
 func (s *Sqlite) WriteSchema(schema parser.Schema) error {
 	params := map[string]interface{}{
 		"TableName": s.tableName,
-		"Schema":    schema,
+		"Schema":    schema.Keys,
 	}
 	return tmplCreateTable.Execute(s.w, params)
 }
@@ -49,8 +49,8 @@ func (s *Sqlite) WriteSchema(schema parser.Schema) error {
 func (s *Sqlite) Write(schema parser.Schema, in parser.Parsed) error {
 	params := map[string]interface{}{
 		"TableName": s.tableName,
-		"In":        in,
-		"Schema":    schema,
+		"In":        in.KVs,
+		"Schema":    schema.Keys,
 	}
 	return tmplInsert.Execute(s.w, params)
 }

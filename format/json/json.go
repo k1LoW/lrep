@@ -24,5 +24,5 @@ func (j *JSON) WriteSchema(schema parser.Schema) error {
 }
 
 func (j *JSON) Write(schema parser.Schema, in parser.Parsed) error {
-	return j.e.Encode(in)
+	return j.e.Encode(in.KVs)
 }
