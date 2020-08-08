@@ -86,7 +86,7 @@ func TestParse(t *testing.T) {
 					"_raw":     `152.120.218.99 - - [25/Jul/2020:12:25:54 +0900] "GET /category/books HTTP/1.1" 200 67 "/item/electronics/4234" "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)"`,
 				},
 				TSKey:   "time",
-				TSValue: time.Date(2020, 7, 25, 12, 25, 54, 0, time.Local),
+				TSValue: time.Date(2020, 7, 25, 3, 25, 54, 0, time.UTC),
 			},
 		},
 	}
