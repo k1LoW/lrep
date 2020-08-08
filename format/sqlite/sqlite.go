@@ -49,7 +49,7 @@ func (s *Sqlite) WriteSchema(schema parser.Schema) error {
 
 func (s *Sqlite) Write(schema parser.Schema, in parser.Parsed) error {
 	if schema.TSKey != "" {
-		in.KVs[schema.TSKey] = in.TSValue.UTC().Format("2006-01-02T03:04:05")
+		in.KVs[schema.TSKey] = in.TSValue.UTC().Format("2006-01-02 03:04:05")
 	}
 	params := map[string]interface{}{
 		"TableName": s.tableName,
