@@ -66,6 +66,10 @@ var builtinCmd = &cobra.Command{
 {{ "REGEXP" | bold }}
        {{ .r.Regexp | bold }}
 
+{{ "TIMESTAMP" | bold }}
+       Key: {{ .r.TSKey | bold}}
+       Format: {{ .r.TSFormat | bold }}
+
 {{ "SAMPLE" | bold }}
        {{index .r.Samples 0}}
 `))
