@@ -94,6 +94,8 @@ github.com/inconshreveable/mousetrap v1.0.0 h1:Z8tu5sraLXCXIcARxBp/8cbvlwVa7Z1NH
 github.com/inconshreveable/mousetrap v1.0.0/go.mod h1:PxqpIevigyE2G7u3NXJIT2ANytuPF1OarO4DADm73n8=
 github.com/itchyny/timefmt-go v0.0.0-20200808061141-b48fbc587456 h1:V/ivEJ/KHQeR2l3J9a4Xv7dJEEThCiH4lprnOIXfYZE=
 github.com/itchyny/timefmt-go v0.0.0-20200808061141-b48fbc587456/go.mod h1:0osSSCQSASBJMsIZnhAaF1C2fCBTJZXrnj37mG8/c+A=
+github.com/itchyny/timefmt-go v0.0.0-20200815154753-91be20c7742b h1:UEWqpcMGfpnjywb5qWpwJAxkfkYoiLfGDGP3kHpvf6M=
+github.com/itchyny/timefmt-go v0.0.0-20200815154753-91be20c7742b/go.mod h1:0osSSCQSASBJMsIZnhAaF1C2fCBTJZXrnj37mG8/c+A=
 github.com/jonboulle/clockwork v0.1.0/go.mod h1:Ii8DK3G1RaLaWxj9trq07+26W01tbo22gdxWY5EU2bo=
 github.com/json-iterator/go v1.1.6/go.mod h1:+SdeFBvtyEkXs7REEP0seUULqWtbJapLOCVDaaPEHmU=
 github.com/jstemmer/go-junit-report v0.0.0-20190106144839-af01ea7f8024/go.mod h1:6v2b51hI/fHJwM22ozAgKL4VKDeJcHhJFhtBdhmNjmU=

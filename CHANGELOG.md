@@ -1,3 +1,11 @@
+## [v0.3.1](https://github.com/k1LoW/lrep/compare/v0.3.0...v0.3.1) (2020-08-21)
+
+* Fix buildin output [#5](https://github.com/k1LoW/lrep/pull/5) ([k1LoW](https://github.com/k1LoW))
+
+## [v0.3.1](https://github.com/k1LoW/lrep/compare/v0.3.0...v0.3.1) (2020-08-21)
+
+* Fix buildin output [#5](https://github.com/k1LoW/lrep/pull/5) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.3.0](https://github.com/k1LoW/lrep/compare/v0.2.0...v0.3.0) (2020-08-09)
 
 * Add option `--ts-key` `--ts-format` for parsing timestamp field [#4](https://github.com/k1LoW/lrep/pull/4) ([k1LoW](https://github.com/k1LoW))
