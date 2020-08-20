@@ -18,7 +18,7 @@ func New(w io.Writer) *TSV {
 
 func (l *TSV) WriteSchema(schema parser.Schema) error {
 	first := true
-	for _, k := range schema {
+	for _, k := range schema.Keys {
 		if !first {
 			if _, err := l.w.Write([]byte("\t")); err != nil {
 				return err
@@ -37,13 +37,13 @@ func (l *TSV) WriteSchema(schema parser.Schema) error {
 
 func (l *TSV) Write(schema parser.Schema, in parser.Parsed) error {
 	first := true
-	for _, k := range schema {
+	for _, k := range schema.Keys {
 		if !first {
 			if _, err := l.w.Write([]byte("\t")); err != nil {
 				return err
 			}
 		}
-		if _, err := l.w.Write([]byte(in[k])); err != nil {
+		if _, err := l.w.Write([]byte(in.KVs[k])); err != nil {
 			return err
 		}
 		first = false

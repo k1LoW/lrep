@@ -145,7 +145,7 @@ CREATE TABLE IF NOT EXISTS lines (
   status TEXT,
   bytes TEXT,
   _raw TEXT,
-  created NUMERIC NOT NULL
+  created TIMESTAMP NOT NULL
 );
 INSERT INTO lines(host, time, request, status, bytes, _raw, created) VALUES ('224.51.78.136', '25/Jul/2020:17:51:24 +0900', 'GET /category/books HTTP/1.1', '200', '130', '224.51.78.136 - - [25/Jul/2020:17:51:24 +0900] "GET /category/books HTTP/1.1" 200 130', datetime('now'));
 INSERT INTO lines(host, time, request, status, bytes, _raw, created) VALUES ('152.114.184.75', '25/Jul/2020:17:51:25 +0900', 'GET /category/finance HTTP/1.1', '200', '56', '152.114.184.75 - - [25/Jul/2020:17:51:25 +0900] "GET /category/finance HTTP/1.1" 200 56', datetime('now'));
@@ -159,6 +159,25 @@ The query can be passed directly to `sqlite3` command.
 
 ``` console
 $ cat /var/log/access.log | lrep -t sqlite --common | sqlite3 lines.db
+```
+
+If you want to parse `time` as timestamp, Use `--ts-key (-k)` and `--ts-format (-T)`.
+
+``` console
+$ tail -f /var/log/access.log | lrep -t sqlite --no-m0 '^(?P<host>\S*) \S* \S* \[(?P<time>.*)\] "(?P<request>.*)" (?P<status>\S*) (?P<bytes>\S*)' -k time -T '%d/%b/%Y:%H:%M:%S %z'
+CREATE TABLE IF NOT EXISTS lines (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  host TEXT,
+  time TIMESTAMP,
+  request TEXT,
+  status TEXT,
+  bytes TEXT,
+  _raw TEXT,
+  created TIMESTAMP NOT NULL
+);
+INSERT INTO lines(host, time, request, status, bytes, _raw, created) VALUES ('20.156.87.118', '2020-08-09 02:30:16', 'GET /category/electronics HTTP/1.1" 200 104 "/item/games/1927', '"Mozilla/4.0', '(com
+patible;', '20.156.87.118 - - [09/Aug/2020:11:30:16 +0900] "GET /category/electronics HTTP/1.1" 200 104 "/item/games/1927" "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0; WOW64; Trident/4.0; GTB6; SL
+CC1; .NET CLR 2.0.50727; Media Center PC 5.0; .NET CLR 3.5.30729; .NET CLR 3.0.30618; .NET4.0C)"', datetime('now'));
 ```
 
 **CSV (`csv`):**
